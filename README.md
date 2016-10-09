@@ -47,3 +47,5 @@ At this point you can do whatever you want in your DAW to set up tracks that are
 # Works on Linux and OSX, not so much on Windows
 
 This code works because [easymidi](https://www.npmjs.com/package/easymidi) relies on the [midi](https://www.npmjs.com/package/midi) package, which in turn relies on ALSA to create a virtual midi device. That... does not work on Windows, because it uses a completely different audio stack. You're going to need a MIDI loop-through-kajigger on windows to make this work, and I've not tried setting that up (ironically, becuase I'm a big it-needs-to-work-on-windows-too advocate when it comes to software development, but I'm currently travelling and only have a macbook available).
+
+Windows will probably require something that taps into, or communicates over [loopmidi](http://www.tobias-erichsen.de/software/loopmidi.html), which rather amazingly is not open source in any way, nor has anyone else written something similar so we don't have an easy way to set up virtual MIDI devices on Windows (...yay...?)
