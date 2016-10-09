@@ -3,104 +3,10 @@
   <head>
     <meta charset="utf-8">
     <title>Browser-based MIDI keyboard</title>
-    <script src="/socket.io.js"></script>
-    <script>
-      var socket = io();
-      var down = {};
-      
-      function showActiveKeys(down) {
-        let keycontainer = document.querySelector('#keys');
-        keycontainer.innerHTML = '';
-        Object.keys(down).filter(key => down[key]).forEach(key => {
-          key = down[key];
-          var e = document.createElement('div');
-          e.textContent = key.name + ' ' + (key.pitch+updown);
-          e.setAttribute('class','key');
-          keycontainer.appendChild(e);
-        });
-      }
-
-      var updown = 0;
-
-      var map = {
-        'z': { note:53, pitch: 2, name:'C'},
-        's': { note:54, pitch: 2, name:'C♯/D♭'},
-        'x': { note:55, pitch: 2, name:'D'},
-        'd': { note:56, pitch: 2, name:'D♯/E♭'},
-        'c': { note:57, pitch: 2, name:'E'},
-        'v': { note:58, pitch: 2, name:'F'},
-        'g': { note:59, pitch: 2, name:'F♯/G♭'},
-        'b': { note:60, pitch: 2, name:'G'},
-        'h': { note:61, pitch: 2, name:'G♯/A♭'},
-        'n': { note:62, pitch: 2, name:'A'},
-        'j': { note:63, pitch: 2, name:'A♯/B♭'},
-        'm': { note:64, pitch: 2, name:'B'},
-        'q': { note:65, pitch: 3, name:'C'},
-        '2': { note:66, pitch: 3, name:'C♯/D♭'},
-        'w': { note:67, pitch: 3, name:'D'},
-        '3': { note:68, pitch: 3, name:'D♯/E♭'},
-        'e': { note:69, pitch: 3, name:'E'},
-        'r': { note:70, pitch: 3, name:'F'},
-        '5': { note:71, pitch: 3, name:'F♯/G♭'},
-        't': { note:72, pitch: 3, name:'G'},
-        '6': { note:73, pitch: 3, name:'G♯/A♭'},
-        'y': { note:74, pitch: 3, name:'A'},
-        '7': { note:75, pitch: 3, name:'A♯/B♭'},
-        'u': { note:76, pitch: 3, name:'B'},
-        'i': { note:77, pitch: 4, name:'C'},
-        '9': { note:78, pitch: 4, name:'C♯/D♭'},
-        'o': { note:79, pitch: 4, name:'D'},
-        '0': { note:80, pitch: 4, name:'D♯/E♭'},
-        'p': { note:81, pitch: 4, name:'E'}
-      };
-
-      socket.on('connected', function(msg){
-        console.log(msg);
-
-        document.addEventListener('keydown', evt => {
-
-          if(evt.keyCode===38) {
-            updown++;
-          } else if (evt.keyCode===40) {
-            updown--;
-          }
-
-          if (!map[evt.key]) return;
-          let key = map[evt.key];
-          let note = key.note + updown * 12;
-          if (note<0 || note > 127) return;
-
-          if (down[note]) return
-          down[note] = key;
-          
-          socket.emit('noteon', {
-            note: note,
-            velocity: 100,
-            channel: 1
-          });
-
-          showActiveKeys(down);
-        });
-
-        document.addEventListener('keyup', evt => {
-
-          if (!map[evt.key]) return;
-          let key = map[evt.key];
-          let note = key.note + updown * 12;
-          if (note<0 || note > 127) return;
-
-          down[note] = false;
-          
-          socket.emit('noteoff', {
-            note: note,
-            velocity: 100,
-            channel: 1
-          });
-
-          showActiveKeys(down);
-        });
-      });
-    </script>
+    <script src="socket.io.js"></script>
+    <script src="data.js"></script>
+    <script src="functions.js"></script>
+    <link rel="stylesheet" href="keys.css">
   </head>
   <body>
     <h1>A browser-controlled virtual MIDI keyboard</h1>
@@ -112,6 +18,10 @@
     <p>Play keys with your computer keyboard, 'q' through 'p' are C3 through E4, 'z' through 'm' are the C2 octave. Use your up and down arrow key to shift key octaves up/down respectively.</p>
 
     <p>Current active keys:</p>
-    <div id="keys"></div>
+    <section id="daw">
+      <div id="keys"></div>
+    </section>
+
+    <script src="socket.js"></script>
   </body>
 </html>
