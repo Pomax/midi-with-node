@@ -97,8 +97,23 @@ body {
   background: #CCC;
 }
 
-#arp .bpm {
+#arp .controls {
+  flex: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+#arp .controls p {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  font-family: Arial;
+  font-style: small-caps;
+}
+
+#arp .controls .bpm, #arp .controls .swing {
+  margin: 0;
   height: 2em;
   width: 4em;
-  align-self: center;
 }

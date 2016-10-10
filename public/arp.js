@@ -10,6 +10,7 @@ function Arpeggiator(tracks, columns, container) {
   this.container.setAttribute("class", "arpeggiator");
   this.matrix = [];
   this.setBPM(140);
+  this.setSwing(0);
   this.setup();
 }
 
@@ -23,11 +24,14 @@ Arpeggiator.prototype = {
     this.addButtons();
   },
   addButtons: function() {
-    var bpm = document.createElement("input");
-    bpm.setAttribute("class", "bpm");
-    bpm.setAttribute("type", "number");
-    bpm.setAttribute("step", 1);
-    bpm.setAttribute("value", this.bpm);
+    var ctrls = document.createElement("div");
+    ctrls.setAttribute("class", "controls");
+    ctrls.innerHTML = "";
+    ctrls.innerHTML += "<p>BPM</p><input type='number' class='bpm' step='1' value='"+this.bpm+"'>";
+    ctrls.innerHTML += "<p>swing</p><input type='number' class='swing' step='0.01' value='"+this.swing+"'>";
+    this.container.appendChild(ctrls);
+
+    let bpm = ctrls.querySelector('.bpm');
     bpm.addEventListener("change", evt => {
       let val = parseInt(bpm.value);
       if (val < 1 || val > 500) {
@@ -37,7 +41,21 @@ Arpeggiator.prototype = {
       }
       this.setBPM(val);
     });
-    this.container.appendChild(bpm);
+    bpm.addEventListener("keydown", keepLocal);
+    bpm.addEventListener("keyup", keepLocal);
+
+    var swing = ctrls.querySelector('.swing');
+    swing.addEventListener("change", evt => {
+      let val = parseFloat(swing.value);
+      if (val < 0 || val > 1) {
+        if (val < 0) val = 0;
+        if (val > 1) val = 1;
+        swing.value = val;
+      }
+      this.setSwing(val);
+    });
+    swing.addEventListener("keydown", keepLocal);
+    swing.addEventListener("keyup", keepLocal);
 
     var play = document.createElement("button");
     play.setAttribute("class","play");
@@ -57,13 +75,23 @@ Arpeggiator.prototype = {
     this.interval = 60000 / val / 4; 
   },
 
+  setSwing: function(val) {
+    this.swing = val;
+  },
+
   play: function() {
     this.playing = 0;
 
     let playColumn = () => {
       if (this.playing === false) return;
 
-      setTimeout(() => playColumn(), this.interval);
+      // figure out the timeout based on the BMP-derived
+      // interval and the swing offset for this column.
+      let swingDirection = (this.playing % 2 == 0) ? 1 : -1;
+      let swingOffset = this.interval * this.swing * swingDirection;
+      let interval = this.interval + swingOffset;
+      
+      setTimeout(() => playColumn(), interval);
 
       this.clearArpHighlight();
       this.matrix[this.playing].play(this.interval);

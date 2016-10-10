@@ -27,6 +27,7 @@ function release(key) {
 }
 
 function keydown(evt) {
+
   // pitch control
   if (evt.keyCode >=37 && evt.keyCode <= 40) {
     if(evt.keyCode===38) {
@@ -57,6 +58,7 @@ function keydown(evt) {
 }
 
 function keyup(evt) {
+
   var key = getKey(evt.key);
   if (!key) return;
   let note = key.note;
@@ -72,6 +74,10 @@ function keyup(evt) {
   
   socket.emit('noteoff', data);
   release(key);
+}
+
+function keepLocal(evt) {
+  evt.stopPropagation();
 }
 
 function addOctave(pitch, container) {
