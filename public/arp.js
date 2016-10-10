@@ -8,8 +8,8 @@ function Arpeggiator(tracks, columns, container) {
   this.columns = columns;
   this.container = container || document.createElement("div");
   this.container.setAttribute("class", "arpeggiator");
-  this.interval = 250;
   this.matrix = [];
+  this.setBPM(140);
   this.setup();
 }
 
@@ -20,10 +20,25 @@ Arpeggiator.prototype = {
       this.matrix[i] = column;
       this.container.appendChild(column.element);
     }
-
     this.addButtons();
   },
   addButtons: function() {
+    var bpm = document.createElement("input");
+    bpm.setAttribute("class", "bpm");
+    bpm.setAttribute("type", "number");
+    bpm.setAttribute("step", 1);
+    bpm.setAttribute("value", this.bpm);
+    bpm.addEventListener("change", evt => {
+      let val = parseInt(bpm.value);
+      if (val < 1 || val > 500) {
+        if (val < 1) val = 1;
+        if (val > 500) val = 500;
+        bpm.value = val;
+      }
+      this.setBPM(val);
+    });
+    this.container.appendChild(bpm);
+
     var play = document.createElement("button");
     play.setAttribute("class","play");
     play.textContent = "play";
@@ -37,6 +52,11 @@ Arpeggiator.prototype = {
     this.container.appendChild(stop);
   },
 
+  setBPM: function(val) {
+    this.bpm = val;
+    this.interval = 60000 / val / 4; 
+  },
+
   play: function() {
     this.playing = 0;
 
@@ -44,7 +64,9 @@ Arpeggiator.prototype = {
       if (this.playing === false) return;
 
       setTimeout(() => playColumn(), this.interval);
-      this.matrix[this.playing].play();
+
+      this.clearArpHighlight();
+      this.matrix[this.playing].play(this.interval);
       this.playing++;
       if (this.playing >= this.columns) {
         this.playing = 0;
@@ -56,6 +78,11 @@ Arpeggiator.prototype = {
 
   stop: function() {
     this.playing = false;
+    this.clearArpHighlight();
+  },
+
+  clearArpHighlight: function() {
+    Array.from(document.querySelectorAll('.arp-cell.active')).forEach(c => c.classList.remove('active'));
   }
 };
 
@@ -73,16 +100,15 @@ ArpColumn.prototype = {
       this.element.appendChild(this[i].element);
     }
   },
-  play: function() {
+  play: function(duration) {
     for(let i=0; i<this.tracks; i++) {
-      this[i].play();
+      this[i].play(duration);
     }
   }
 };
 
 function ArpCell() {
   this.key = false;
-  this.duration = 250;
   this.element = document.createElement("div");
   this.element.setAttribute("class", "arp-cell");
   this.setup();
@@ -104,12 +130,15 @@ ArpCell.prototype = {
       }
     });
   },
-  play: function() {
+  play: function(duration) {
+    this.element.classList.add('active');
     if (this.key) {
       socket.emit('noteon', this.key);
+      highlight(this.key);
       setTimeout(() => {
         socket.emit('noteoff', this.key);
-      }, this.duration);
+        release(this.key);
+      }, duration);
     }
   }
 };

@@ -7,12 +7,16 @@
     "easymidi": "^0.0.2",
     "g": "^2.0.1",
     "midi": "^0.9.5",
+    "npm-run-all": "^3.1.0",
+    "open": "0.0.5",
     "pi": "^1.2.3",
     "socket.io": "^1.5.0"
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "browser": "open http://localhost:8080",
+    "server": "node server",
+    "start": "npm install && run-p server browser"
   },
   "keywords": [],
   "author": "",

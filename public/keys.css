@@ -1,3 +1,7 @@
+body {
+  margin: 2em 1em;
+}
+
 #keys {
   display: flex;
   flex-direction: row;
@@ -41,6 +45,7 @@
 #arp {
   display: flex;
   flex-direction: row;
+  justify-content: center;
   width: 95vw;
   height: 10vw;
   border: 1px solid #333;
@@ -62,6 +67,18 @@
   justify-content: center;
 }
 
+.arp-column:nth-child(4n + 1) .arp-cell {
+  background: #E2E2D0;
+}
+
+.arp-cell.active {
+  background: #DDD0D0;
+}
+
+.arp-column:nth-child(4n + 1) .arp-cell.active {
+  background: #EEE2E2;
+}
+
 .arp-cell-label {
   flex: 1 1 auto;
   line-height: 0;
@@ -78,4 +95,10 @@
 
 #arp button:active {
   background: #CCC;
+}
+
+#arp .bpm {
+  height: 2em;
+  width: 4em;
+  align-self: center;
 }
