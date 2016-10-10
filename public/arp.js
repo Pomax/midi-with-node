@@ -90,6 +90,8 @@ Arpeggiator.prototype = {
       let swingDirection = (this.playing % 2 == 0) ? 1 : -1;
       let swingOffset = this.interval * this.swing * swingDirection;
       let interval = this.interval + swingOffset;
+
+      console.log(interval);
       
       setTimeout(() => playColumn(), interval);
 
