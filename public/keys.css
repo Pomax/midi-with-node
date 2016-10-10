@@ -1,39 +1,81 @@
 #keys {
-	display: flex;
-	flex-direction: row;
-	width: 99vw;
-	height: 10vw;
+  display: flex;
+  flex-direction: row;
+  width: 95vw;
+  height: 10vw;
 }
 
 .key {
-	border: 1px solid black;
-	flex: 1 1 auto;
-	position: relative;
-	z-index: 1;
-	overflow: hidden;
-	letter-spacing: -10vw;
-    padding-left: 0.4vw;
-    box-sizing: border-box;	
+  border: 1px solid black;
+  flex: 1 1 auto;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  letter-spacing: -10vw;
+  padding-left: 0.4vw;
+  box-sizing: border-box; 
 }
 
 .white {
-	background: white;
-	color: black;
-	line-height: 18vw;
+  background: white;
+  color: black;
+  line-height: 18vw;
 }
 
 .black {
-	background: black;
-	color: white;
-	line-height: 8.5vw;
+  background: black;
+  color: white;
+  line-height: 8.5vw;
 
-	height: 50%;
-	z-index: 2;
-	margin-left: calc(-88vw / 148);
-	margin-right: calc(-88vw / 148);
+  height: 50%;
+  z-index: 2;
+  margin-left: calc(-88vw / 148);
+  margin-right: calc(-88vw / 148);
 }
 
 .active {
-	background: blue;
-	color: yellow;
+  background: blue;
+  color: yellow;
+}
+
+#arp {
+  display: flex;
+  flex-direction: row;
+  width: 95vw;
+  height: 10vw;
+  border: 1px solid #333;
+  user-select: none;
+  -moz-user-select: none;
+}
+
+.arp-column {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.arp-cell {
+  flex: 1 1 auto;
+  border: 1px solid white;
+  background: #DDD;
+  display: flex;
+  justify-content: center;
+}
+
+.arp-cell-label {
+  flex: 1 1 auto;
+  line-height: 0;
+  position: relative;
+  top: 0.7em;
+  text-align: center;
+}
+
+#arp button {
+  border: 1px solid white;
+  margin: 0 1px;
+  background: #DDD0D0;
+}
+
+#arp button:active {
+  background: #CCC;
 }

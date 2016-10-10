@@ -15,12 +15,21 @@
 
     <p>This page sends key events to the small MIDI server that's running on port 8080, which can be routed to any DAW or MIDI input device that has the ability to select its MIDI event source.</p>
 
+    <h2>Press some keys!</h2>
+
     <p>Play keys with your computer keyboard, 'q' through 'p' are C3 through E4, 'z' through 'm' are the C2 octave. Use your up and down arrow key to shift key octaves up/down respectively.</p>
 
     <p>Current active keys:</p>
     <section id="daw">
       <div id="keys"></div>
     </section>
+
+    <h2>Or, arpeggiate all the things!</h2>
+
+    <p>Alternatively, you can use the following 16 x 6 arpeggiator to write out a short diddlidoodle and have JavaScript play that pattern to the server. Note that it won't send the pattern over for special pattern processing: it just sends keypresses as if you were playing the arpeggio yourself.</p> 
+
+    <section id="arp"></section>
+    <script src="arp.js"></script>
 
     <script src="socket.js"></script>
   </body>
