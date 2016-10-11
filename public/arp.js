@@ -3,12 +3,17 @@ function setupArpeggiator() {
   new Arpeggiator(6, 16, arp);
 }
 
+
+/**
+ * ...
+ * ...
+ * ...
+ */
 function Arpeggiator(tracks, columns, container) {
   this.tracks = tracks;
   this.columns = columns;
   this.container = container || document.createElement("div");
   this.container.setAttribute("class", "arpeggiator");
-  this.matrix = [];
   this.setBPM(140);
   this.setSwing(0);
   this.setup();
@@ -17,11 +22,16 @@ function Arpeggiator(tracks, columns, container) {
 Arpeggiator.prototype = {
   setup: function() {
     for(let i=0; i<this.columns; i++) {
-      let column = new ArpColumn(this.tracks);
-      this.matrix[i] = column;
+      let column = new ArpColumn(i, this.tracks, this);
+      this[i] = column;
       this.container.appendChild(column.element);
     }
     this.addButtons();
+  },
+  selectCell: function(row, col) {
+    if (col < this.columns) {
+      this[col].selectCell(row, col);
+    }
   },
   addButtons: function() {
     var ctrls = document.createElement("div");
@@ -91,12 +101,10 @@ Arpeggiator.prototype = {
       let swingOffset = this.interval * this.swing * swingDirection;
       let interval = this.interval + swingOffset;
 
-      console.log(interval);
-      
       setTimeout(() => playColumn(), interval);
 
       this.clearArpHighlight();
-      this.matrix[this.playing].play(this.interval);
+      this[this.playing].play(this.interval);
       this.playing++;
       if (this.playing >= this.columns) {
         this.playing = 0;
@@ -116,8 +124,17 @@ Arpeggiator.prototype = {
   }
 };
 
-function ArpColumn(tracks) {
+
+/**
+ * ...
+ * ...
+ * ...
+ */
+function ArpColumn(column, tracks, owner) {
+  this.column = column;
   this.tracks = tracks;
+  this.owner = owner;
+
   this.element = document.createElement("div");
   this.element.setAttribute("class","arp-column");
   this.setup();
@@ -126,7 +143,7 @@ function ArpColumn(tracks) {
 ArpColumn.prototype = {
   setup: function() {
     for(let i=0; i<this.tracks; i++) {
-      this[i] = new ArpCell();
+      this[i] = new ArpCell(i, this.column, this);
       this.element.appendChild(this[i].element);
     }
   },
@@ -134,31 +151,73 @@ ArpColumn.prototype = {
     for(let i=0; i<this.tracks; i++) {
       this[i].play(duration);
     }
+  },
+  selectCell: function(row, col) {
+    if (col===this.column) {
+      if (row < this.element.children.length) {
+        this[row].element.focus();
+      }
+    } else {
+      this.owner.selectCell(row, col);
+    }
   }
 };
 
-function ArpCell() {
+
+/**
+ * ...
+ * ...
+ * ...
+ */
+function ArpCell(row, column, owner) {
+  this.row = row;
+  this.column = column;
+  this.owner = owner;
+
   this.key = false;
   this.element = document.createElement("div");
   this.element.setAttribute("class", "arp-cell");
+  this.element.setAttribute("tabindex", 0);
   this.setup();
 }
 
 ArpCell.prototype = {
   setup: function() {
-    this.element.addEventListener("click", () => {
-      var key = prompt("press a key on the keyboard");
-      if (key !== null) {
-        if (!key.trim()) {
+    this.element.addEventListener("focus", e => this.element.classList.add('selected'));
+    this.element.addEventListener("blur", e => this.element.classList.remove('selected'));
+    this.element.addEventListener("keydown", e => this.input(e));
+  },
+  input: function(evt) {
+
+    let key = evt.key;
+    let keyCode = evt.keyCode;
+
+    // left, up, right, down
+    if (keyCode >= 37 && keyCode <=40) {
+      keepLocal(evt);
+      evt.preventDefault();
+      if (keyCode === 37 && this.column>0) { this.owner.selectCell(this.row, this.column - 1); }
+      if (keyCode === 38 && this.row>0) { this.owner.selectCell(this.row - 1, this.column); }
+      if (keyCode === 39) { this.owner.selectCell(this.row, this.column + 1); }
+      if (keyCode === 40) { this.owner.selectCell(this.row + 1, this.column); }
+      return;
+    }
+
+    if (key !== null) {
+      if (!key.trim()) {
+        this.key = false;
+        this.element.textContent = '';
+      } else {
+        this.key = getKey(key);
+        if (!this.key) {
           this.key = false;
           this.element.textContent = '';
         } else {
-          this.key = getKey(key);
           this.key.velocity = 100;
           this.element.innerHTML = "<span class='arp-cell-label'>" + this.key.note + "</span>";
-        }
+       }
       }
-    });
+    }
   },
   play: function(duration) {
     this.element.classList.add('active');

@@ -13,6 +13,8 @@ let octave = {
   'B' : 'white'
 };
 
+var SpecialKeyInstruction = false;
+
 var down = {};
 
 var updown = 0;

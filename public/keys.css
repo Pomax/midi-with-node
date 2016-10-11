@@ -75,6 +75,11 @@ body {
   background: #DDD0D0;
 }
 
+.arp-cell.selected {
+  border: 1px dotted blue;
+  box-sizing: border-box;
+}
+
 .arp-column:nth-child(4n + 1) .arp-cell.active {
   background: #EEE2E2;
 }

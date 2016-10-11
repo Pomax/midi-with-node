@@ -23,12 +23,12 @@ io.sockets.on('connection', function(socket) {
   socket.emit('connected', 'you are now connected.');
  
   socket.on('noteon', function(data) {
-    console.log('noteon:',data);
+    console.log('emitting noteon:',data);
     out.send('noteon', data);
   });
 
   socket.on('noteoff', function(data) {
-    console.log('noteoff:',data);
+    console.log('emitting noteoff:',data);
     out.send('noteoff', data);
   });
 });

@@ -11,25 +11,24 @@
   <body>
     <h1>A browser-controlled virtual MIDI keyboard</h1>
 
-    <p>Github repository here: <a href="https://github.com/Pomax/midi-with-node">https://github.com/Pomax/midi-with-node</a></p>
+    <p>This page sends key events to the small MIDI server that's running on port 8080, which can be routed to any DAW or MIDI input device that has the ability to select its MIDI event source. The code for this is hosted over on Github, at <a href="https://github.com/Pomax/midi-with-node">https://github.com/Pomax/midi-with-node</a></p>
 
-    <p>This page sends key events to the small MIDI server that's running on port 8080, which can be routed to any DAW or MIDI input device that has the ability to select its MIDI event source.</p>
+    <h2>Press some keys, play some music!</h2>
 
-    <h2>Press some keys!</h2>
+    <p>While the base page is "selected", simply press keys on your computer keyboard to play MIDI keys to whatever's listening to the Nodejs MIDI out device. You can use q' through 'p' as C-to-next-E register, and 'z' through 'm' for the lower-C register. If you need higher or lower octaves you can use your left and right arrow key to shift the MIDI key octave down/up respectively.</p>
 
-    <p>Play keys with your computer keyboard, 'q' through 'p' are C3 through E4, 'z' through 'm' are the C2 octave. Use your up and down arrow key to shift key octaves up/down respectively.</p>
-
-    <p>Current active keys:</p>
     <section id="daw">
       <div id="keys"></div>
     </section>
 
     <h2>Or, arpeggiate all the things!</h2>
 
-    <p>Alternatively, you can use the following 16 x 6 arpeggiator (16 beats, 6 voices) to write out a short diddlidoodle and have JavaScript play that pattern to the server. Note that it won't send the pattern over for special pattern processing: it just sends keypresses as if you were playing the arpeggio yourself.</p> 
+    <p>Alternatively, you can use the following 16 x 6 arpeggiator (4 measures of 4 quarter notes, for 6 concurrent voices) to write out a short diddlidoodle and have JavaScript play that pattern to the server. Note that it won't send the pattern over for special pattern processing: it just sends keypresses as if you were playing the arpeggio yourself. Click on a cell to select it, then press the same keys you'd press for keyboard play. Use your arrow keys to move between cells. To clear a key, use your enter/return key on a cell.</p>
 
     <section id="arp"></section>
     <script src="arp.js"></script>
+
+    <p>BPM, play, and stop should be obvious; Swing determines the swing between two consecutive beats: 0 is a straight 4:4 beat, 0.2 is a 12:8 jazz swing, 0.5 is "My baby just cares for me" levels of swing, and anything higher than 0.5 is probably terrible.</p>
 
     <script src="socket.js"></script>
   </body>

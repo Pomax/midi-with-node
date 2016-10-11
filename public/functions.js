@@ -26,15 +26,31 @@ function release(key) {
   document.querySelector(makeQS(key.name, key.pitch)).classList.remove('active');
 }
 
+function checkSpecialDown(evt) {
+  if (evt.altKey || evt.ctrlKey || evt.shiftKey || evt.metaKey) {
+    SpecialKeyInstruction = true;
+  }
+}
+
+function checkSpecialUp(evt) {
+  if (evt.altKey || evt.ctrlKey || evt.shiftKey || evt.metaKey) {
+    SpecialKeyInstruction = false;
+  }
+}
+
 function keydown(evt) {
+  if (SpecialKeyInstruction) return;
 
   // pitch control
-  if (evt.keyCode >=37 && evt.keyCode <= 40) {
-    if(evt.keyCode===38) {
-      ++updown;
-    } else if (evt.keyCode===40) {
+  if (evt.keyCode === 37 || evt.keyCode === 39) {
+    evt.preventDefault();
+    if(evt.keyCode===37) {
       --updown;
+    } else if (evt.keyCode===39) {
+      ++updown;
     }
+    if (updown<-2) { updown = -2; }
+    if (updown>4) { updown = 4; }
     relabelKeys();
   }
 
@@ -58,6 +74,7 @@ function keydown(evt) {
 }
 
 function keyup(evt) {
+  if (SpecialKeyInstruction) return;
 
   var key = getKey(evt.key);
   if (!key) return;
@@ -105,10 +122,8 @@ function relabelKeys() {
     let key = getKey(letter);
     let qs = makeQS(key.name, key.pitch);
     let e = document.querySelector(qs);
-    try {
+    if (e) {
       e.textContent = letter;
-    } catch (e) {
-      console.log(qs);
     }
   });
 }
