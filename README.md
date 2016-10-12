@@ -47,11 +47,11 @@ Then in your DAW, go to the MIDI device options and find the "Nodejs MIDI out" d
 
 At this point you can do whatever you want in your DAW to set up tracks that are bound to MIDI input, and typing keys in the browser tab for the virtual MIDI device will send MIDI events to your DAW.
 
-## Works on Linux and OSX, not so much on Windows
+## Works out of the box on Linux and OSX, requires one more thing on Windows
 
-This code works because [easymidi](https://www.npmjs.com/package/easymidi) relies on the [midi](https://www.npmjs.com/package/midi) package, which in turn relies on ALSA to create a virtual midi device. That... does not work on Windows, because it uses a completely different audio stack. You're going to need a MIDI loop-through-kajigger on windows to make this work, and I've not tried setting that up (ironically, becuase I'm a big it-needs-to-work-on-windows-too advocate when it comes to software development, but I'm currently travelling and only have a macbook available).
+This code works because [easymidi](https://www.npmjs.com/package/easymidi) relies on the [midi](https://www.npmjs.com/package/midi) package, which in turn relies on ALSA to create a virtual midi device. That... does not work on Windows, because it uses a completely different audio stack.
 
-Windows will probably require something that taps into, or communicates over [loopmidi](http://www.tobias-erichsen.de/software/loopmidi.html) or [loopbe1](http://nerds.de/en/loopbe1.html), neither of which -rather amazingly- are open source in any way. More amazing is that seemingly no one else has written something similar, so we don't have an easy way to set up virtual MIDI devices on Windows (...yay...?)
+To make things work on Windows, you need a MIDI loopback device like [loopmidi](http://www.tobias-erichsen.de/software/loopmidi.html) or [loopbe1](http://nerds.de/en/loopbe1.html) installed. With (either of) those running, create a virtual MIDI device called `NodeJS MIDI out` (technically case insensitive) before running `npm start` and you should be good to go. Easymidi will see the device acting as MIDI I/O based on the name and select that on the `win32` platform (even when you're on x64, because Node uses `win32` as Windows indicator in the same way it uses `darwin` for OSX despite that being a truly ancient OSX at this point).
 
 ## Screenshots
 
