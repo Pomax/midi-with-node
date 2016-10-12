@@ -5,6 +5,7 @@
   "main": "midi.js",
   "dependencies": {
     "easymidi": "^0.0.2",
+    "express": "^4.14.0",
     "g": "^2.0.1",
     "midi": "^0.9.5",
     "npm-run-all": "^3.1.0",
