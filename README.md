@@ -53,6 +53,10 @@ This code works because [easymidi](https://www.npmjs.com/package/easymidi) relie
 
 To make things work on Windows, you need a MIDI loopback device like [loopmidi](http://www.tobias-erichsen.de/software/loopmidi.html) or [loopbe1](http://nerds.de/en/loopbe1.html) installed. With (either of) those running, create a virtual MIDI device called `NodeJS MIDI out` (technically case insensitive) before running `npm start` and you should be good to go. Easymidi will see the device acting as MIDI I/O based on the name and select that on the `win32` platform (even when you're on x64, because Node uses `win32` as Windows indicator in the same way it uses `darwin` for OSX despite that being a truly ancient OSX at this point).
 
+## Live demo
+
+Not technically live because it needs a Node.js backing, but the web UI can be viewed over on https://pomax.github.io/midi-with-node/public
+
 ## Screenshots
 
 ![a screenshot of the browser MIDI panel](screenshot.png)
