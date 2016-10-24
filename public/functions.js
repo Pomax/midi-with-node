@@ -1,3 +1,11 @@
+var haveSocket = (typeof socket !== "undefined");
+
+function send(evtname, data) {
+  if (haveSocket) {
+    socket.emit(evtname, data);
+  }
+}
+
 function getKey(key) {
   if (!map[key]) return false;
   var base = Object.assign({}, map[key]);
@@ -79,7 +87,7 @@ function playNote(note, key, e) {
     channel: 1
   };
   
-  socket.emit('noteon', data);
+  send('noteon', data);
   highlight(key, e);
 }
 
@@ -103,7 +111,7 @@ function releaseNote(note, key, e) {
     channel: 1
   };
   
-  socket.emit('noteoff', data);
+  send('noteoff', data);
   release(key, e);
 }
 
