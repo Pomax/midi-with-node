@@ -18,12 +18,18 @@ function makeQS(name, pitch) {
   return '.' + cls.replace(/ +/g,'.');
 }
 
-function highlight(key) {
-  document.querySelector(makeQS(key.name, key.pitch)).classList.add('active');
+function highlight(key, e) {
+  if (!e) {
+    e = document.querySelector(makeQS(key.name, key.pitch));
+  }
+  e.classList.add('active');
 }
 
-function release(key) {
-  document.querySelector(makeQS(key.name, key.pitch)).classList.remove('active');
+function release(key, e) {
+  if (!e) {
+    e = document.querySelector(makeQS(key.name, key.pitch));
+  }
+  e.classList.remove('active');
 }
 
 function checkSpecialDown(evt) {
@@ -60,6 +66,10 @@ function keydown(evt) {
   let note = key.note;
   if (note<0 || note > 127) return;
 
+  playNote(note, key);
+}
+
+function playNote(note, key, e) {
   if (down[note]) return
   down[note] = key;
 
@@ -70,7 +80,7 @@ function keydown(evt) {
   };
   
   socket.emit('noteon', data);
-  highlight(key);
+  highlight(key, e);
 }
 
 function keyup(evt) {
@@ -81,6 +91,10 @@ function keyup(evt) {
   let note = key.note;
   if (note<0 || note > 127) return;
 
+  releaseNote(note, key);
+}
+
+function releaseNote(note, key, e) {
   down[note] = false;
 
   let data = {
@@ -90,27 +104,32 @@ function keyup(evt) {
   };
   
   socket.emit('noteoff', data);
-  release(key);
+  release(key, e);
 }
 
 function keepLocal(evt) {
   evt.stopPropagation();
 }
 
-function addOctave(pitch, container) {
-  Object.keys(octave).forEach(name => {
+function addOctave(pitch, container, baseNote) {
+  let keys = Object.keys(octave);
+  keys.forEach((name, offset) => {
+    let note = baseNote + offset;
     let div = document.createElement('div');
     let cls = makeClass(name, pitch);
     div.setAttribute('class',`${octave[name]} key ${cls}`);
+    div.addEventListener("mousedown", (evt) => playNote(note, false, div));
+    container.addEventListener("mouseup", (evt) => releaseNote(note, false, div));
     container.appendChild(div);
   });
+  return keys.length;
 }
 
 function drawKeyboard() {
   let d = document.querySelector('#keys');
-  c1 = 41
+  let baseNote = 17;
   for(let pitch = -1; pitch<7; pitch++) {
-    addOctave(pitch, d);
+    baseNote += addOctave(pitch, d, baseNote);
   }
   relabelKeys();
 }
