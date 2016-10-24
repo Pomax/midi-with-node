@@ -6,7 +6,7 @@ function bootstrap() {
 	setupArpeggiator();
 }
 
-if (io) {
+if (typeof io !== "undefined") {
 	var socket = io();
 	socket.on('connected', function(msg){
 		bootstrap();
