@@ -1,7 +1,16 @@
 function bootstrap() {
 	drawKeyboard();
-	document.addEventListener('keydown', (evt) => { checkSpecialDown(evt); keydown(evt); });
-	document.addEventListener('keyup', (evt) => { checkSpecialDown(evt); keyup(evt); });
+
+	document.addEventListener('keydown', (evt) => {
+		checkSpecialDown(evt);
+		keydown(evt);
+	});
+
+	document.addEventListener('keyup', (evt) => {
+		checkSpecialDown(evt);
+		keyup(evt);
+	});
+
 	setupArpeggiator();
 }
 

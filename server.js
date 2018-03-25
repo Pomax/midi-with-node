@@ -25,7 +25,7 @@ app.use(express.static(path.join(__dirname,'public')));
 
 app.get('/socket.io.js', function(req, res) {
   res.sendFile('socket.io.js', {
-    root: path.join(__dirname, 'node_modules', 'socket.io-client')
+    root: path.join(__dirname, 'node_modules', 'socket.io-client', 'dist')
   });
 });
 

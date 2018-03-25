@@ -1,4 +1,5 @@
 var haveSocket = (typeof socket !== "undefined");
+console.log('haveSocket: ', haveSocket);
 
 function send(evtname, data) {
   if (haveSocket) {
@@ -86,7 +87,7 @@ function playNote(note, key, e) {
     velocity: 100,
     channel: 1
   };
-  
+
   send('noteon', data);
   highlight(key, e);
 }
@@ -110,7 +111,7 @@ function releaseNote(note, key, e) {
     velocity: 100,
     channel: 1
   };
-  
+
   send('noteoff', data);
   release(key, e);
 }

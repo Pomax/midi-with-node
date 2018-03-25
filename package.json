@@ -4,7 +4,7 @@
   "description": "",
   "main": "midi.js",
   "dependencies": {
-    "easymidi": "^0.0.2",
+    "easymidi": "0.0.2",
     "express": "^4.14.0",
     "npm-run-all": "^3.1.0",
     "open": "0.0.5",
